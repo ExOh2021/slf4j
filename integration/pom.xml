@@ -23,6 +23,7 @@
     <ant-junit.version>1.9.0</ant-junit.version>
     <antrun-plugin.version>1.8</antrun-plugin.version>
     <bnd.skip>true</bnd.skip>
+    <bnd.baseline.skip>true</bnd.baseline.skip>
   </properties>
 
 
@@ -133,8 +134,19 @@
           <skip>true</skip>
         </configuration>
       </plugin>
-
-
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>compare-manifest-with-baseline</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
 
 

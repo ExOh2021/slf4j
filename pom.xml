@@ -60,6 +60,8 @@
     <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
     <maven-jxr-plugin.version>3.1.1</maven-jxr-plugin.version>
     <bnd.version>6.4.0</bnd.version>
+    
+    <baseline.version>2.0.5</baseline.version>
   </properties>
 
   <developers>
@@ -317,6 +319,63 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
         <version>3.0.0</version>
+      </plugin>
+
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-baseline-maven-plugin</artifactId>
+        <version>${bnd.version}</version>
+        <configuration>
+          <base>
+            <version>${baseline.version}</version>
+          </base>
+          <failOnMissing>false</failOnMissing>
+          <continueOnError>true</continueOnError>
+          <fullReport>false</fullReport>
+          <!--diffignores>
+            <diffignore>META-INF/*</diffignore>
+            <diffignore>org/slf4j/*</diffignore>
+            <diffignore>Bundle-Version</diffignore>
+            <diffignore>Build-Jdk-Spec</diffignore>
+          </diffignores-->
+        </configuration>
+        <executions>
+          <execution>
+            <id>bnd-baseline</id>
+            <goals>
+              <goal>baseline</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>compare-manifest-with-baseline</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <arg>-jar</arg>
+                <arg> ${maven.multiModuleProjectDirectory}/osgi.utils/target/osgi.utils-0.0.1-SNAPSHOT-jar-with-dependencies.jar</arg>
+                <arg>-bundle</arg>
+                <arg>${project.build.directory}/${project.artifactId}-${project.version}.jar</arg>
+                <arg>-baseline</arg>
+                <arg>C:\Users\Hannes\.m2\repository\org\slf4j/${project.artifactId}/${baseline.version}/${project.artifactId}-${baseline.version}.jar</arg>
+                <arg>-ignored.headers</arg>
+                <arg>Created-By,Originally-Created-By,Build-Jdk-Spec,Tool,Implementation-Version,Bundle-Version</arg>
+              </arguments>
+              <inheritIo>true</inheritIo>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>
